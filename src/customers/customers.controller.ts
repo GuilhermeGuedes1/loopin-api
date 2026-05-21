@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, Query } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { CreateCustomersDTO } from './dtos/customers';
 
@@ -6,23 +6,29 @@ import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { CurrentUser } from 'src/decorators/currentUser.decorator';
 import { AuthenticatedUser } from 'src/auth/types/AuthenticatedUser';
 
+const DEV_ORGANIZATION_ID = 'af7572ed-98a6-4dde-ac4c-2b031d407b34';
+
 @Controller('customers')
 export class CustomersController {
   constructor(private customersService: CustomersService) {}
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get()
-  async getCustomers(@CurrentUser() user: AuthenticatedUser) {
-    const users = await this.customersService.getCustomers(user.organizationId);
-    return users;
-  }
-  @UseGuards(JwtAuthGuard)
-  @Post('register')
-  async CreateCustomer(
-    @CurrentUser() user: AuthenticatedUser,
-    @Body() body: CreateCustomersDTO,
+  async getCustomers(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('search') search?: string,
   ) {
-    console.log(user);
-    return this.customersService.createCustomers(user.organizationId, body);
+    return this.customersService.getCustomers(
+      DEV_ORGANIZATION_ID,
+      Number(page) || 1,
+      Number(limit) || 10,
+      search,
+    );
+  }
+  // @UseGuards(JwtAuthGuard)
+  @Post('register')
+  async createCustomer(@Body() body: CreateCustomersDTO) {
+    return this.customersService.createCustomers(DEV_ORGANIZATION_ID, body);
   }
 }

@@ -1,21 +1,20 @@
-import { Controller, Post, UseGuards, Body } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { VisitsService } from './visits.service';
-
-import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { CreateVisitDTO } from './dtos/visit';
-import { CurrentUser } from 'src/decorators/currentUser.decorator';
-import { AuthenticatedUser } from 'src/auth/types/AuthenticatedUser';
+
+const DEV_ORGANIZATION_ID = 'af7572ed-98a6-4dde-ac4c-2b031d407b34';
+const DEV_USER_ID = '1d88889e-423d-43c8-b537-8008b10fbdcf';
 
 @Controller('visits')
 export class VisitsController {
   constructor(private visitsService: VisitsService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post('create')
-  async createVisit(
-    @CurrentUser() user: AuthenticatedUser,
-    @Body() body: CreateVisitDTO,
-  ) {
-    return this.visitsService.createVisit(user, body);
+  async createVisit(@Body() body: CreateVisitDTO) {
+    return this.visitsService.createVisit(
+      DEV_ORGANIZATION_ID,
+      DEV_USER_ID,
+      body,
+    );
   }
 }

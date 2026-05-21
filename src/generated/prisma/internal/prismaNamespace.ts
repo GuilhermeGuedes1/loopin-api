@@ -791,6 +791,7 @@ export const VisitScalarFieldEnum = {
   customerId: 'customerId',
   organizationId: 'organizationId',
   createdById: 'createdById',
+  visitedAt: 'visitedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
