@@ -20,6 +20,33 @@ export class CustomersService {
     );
   }
 
+  async searchCustomers(organizationId: string, search = '') {
+    return this.prisma.customer.findMany({
+      where: {
+        organizationId,
+        ...(search && {
+          OR: [
+            { name: { contains: search, mode: 'insensitive' } },
+            { lastName: { contains: search, mode: 'insensitive' } },
+            { email: { contains: search, mode: 'insensitive' } },
+            { phone: { contains: search, mode: 'insensitive' } },
+          ],
+        }),
+      },
+      select: {
+        id: true,
+        name: true,
+        lastName: true,
+        email: true,
+        phone: true,
+      },
+      take: 10,
+      orderBy: {
+        name: 'asc',
+      },
+    });
+  }
+
   async getCustomers(
     organizationId: string,
     page = 1,
