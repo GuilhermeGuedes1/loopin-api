@@ -66,3 +66,11 @@ export class SigninDTO {
   @MinLength(6)
   password!: string;
 }
+
+export class MeResponseDTO {
+  sub!: string;
+  email!: string;
+  name!: string;
+  role!: string;
+  organizationName!: string;
+}

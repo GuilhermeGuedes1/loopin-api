@@ -6,29 +6,31 @@ import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { CurrentUser } from 'src/decorators/currentUser.decorator';
 import { AuthenticatedUser } from 'src/auth/types/AuthenticatedUser';
 
-const DEV_ORGANIZATION_ID = 'af7572ed-98a6-4dde-ac4c-2b031d407b34';
-
+@UseGuards(JwtAuthGuard)
 @Controller('customers')
 export class CustomersController {
   constructor(private customersService: CustomersService) {}
 
-  // @UseGuards(JwtAuthGuard)
   @Get()
   async getCustomers(
+    @CurrentUser() user: AuthenticatedUser,
     @Query('page') page?: string,
     @Query('limit') limit?: string,
     @Query('search') search?: string,
   ) {
     return this.customersService.getCustomers(
-      DEV_ORGANIZATION_ID,
+      user.organizationId,
       Number(page) || 1,
       Number(limit) || 10,
       search,
     );
   }
-  // @UseGuards(JwtAuthGuard)
+
   @Post('register')
-  async createCustomer(@Body() body: CreateCustomersDTO) {
-    return this.customersService.createCustomers(DEV_ORGANIZATION_ID, body);
+  async createCustomer(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() body: CreateCustomersDTO,
+  ) {
+    return this.customersService.createCustomers(user.organizationId, body);
   }
 }
