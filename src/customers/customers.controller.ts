@@ -1,4 +1,15 @@
 import { Controller, Get, Post, Body, UseGuards, Query } from '@nestjs/common';
+
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiOkResponse,
+  ApiCreatedResponse,
+  ApiUnauthorizedResponse,
+  ApiQuery,
+} from '@nestjs/swagger';
+
 import { CustomersService } from './customers.service';
 import { CreateCustomersDTO } from './dtos/customers';
 
@@ -7,10 +18,26 @@ import { CurrentUser } from 'src/decorators/currentUser.decorator';
 import { AuthenticatedUser } from 'src/auth/types/AuthenticatedUser';
 
 @UseGuards(JwtAuthGuard)
+@ApiTags('Customers')
+@ApiBearerAuth()
 @Controller('customers')
 export class CustomersController {
   constructor(private customersService: CustomersService) {}
 
+  @ApiOperation({
+    summary: 'Search customers',
+  })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    example: 'ana',
+  })
+  @ApiOkResponse({
+    description: 'Customers found successfully',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
   @Get('search')
   async searchCustomers(
     @CurrentUser() user: AuthenticatedUser,
@@ -19,6 +46,30 @@ export class CustomersController {
     return this.customersService.searchCustomers(user.organizationId, search);
   }
 
+  @ApiOperation({
+    summary: 'List customers',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    example: 'ana',
+  })
+  @ApiOkResponse({
+    description: 'Customers fetched successfully',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
   @Get()
   async getCustomers(
     @CurrentUser() user: AuthenticatedUser,
@@ -34,6 +85,15 @@ export class CustomersController {
     );
   }
 
+  @ApiOperation({
+    summary: 'Create customer',
+  })
+  @ApiCreatedResponse({
+    description: 'Customer created successfully',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
   @Post('register')
   async createCustomer(
     @CurrentUser() user: AuthenticatedUser,
