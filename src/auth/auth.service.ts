@@ -104,4 +104,124 @@ export class AuthService {
       organizationName: user.organization.name,
     };
   }
+
+  async createDemoAccount() {
+    const demoId = crypto.randomUUID();
+
+    const organization = await this.prisma.organization.create({
+      data: {
+        name: 'Loopin Demo',
+        phone: '(11) 99999-0000',
+        document: `DEMO-${demoId}`,
+        isDemo: true,
+      },
+    });
+
+    const user = await this.prisma.user.create({
+      data: {
+        name: 'Usuário Demo',
+        email: `demo-${demoId}@loopin.demo`,
+        password: 'demo-without-password',
+        phone: '(11) 99999-0000',
+        role: 'ADMIN',
+        isDemo: true,
+        demoExpiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
+        organizationId: organization.id,
+      },
+    });
+
+    await this.prisma.customer.createMany({
+      data: [
+        {
+          name: 'Ana',
+          lastName: 'Souza',
+          phone: '(11) 99999-1111',
+          email: 'ana.demo@loopin.demo',
+          city: 'São Paulo',
+          state: 'SP',
+          country: 'Brasil',
+          organizationId: organization.id,
+        },
+        {
+          name: 'Carlos',
+          lastName: 'Lima',
+          phone: '(21) 98888-2222',
+          email: 'carlos.demo@loopin.demo',
+          city: 'Rio de Janeiro',
+          state: 'RJ',
+          country: 'Brasil',
+          organizationId: organization.id,
+        },
+        {
+          name: 'Marina',
+          lastName: 'Costa',
+          phone: '(31) 97777-3333',
+          email: 'marina.demo@loopin.demo',
+          city: 'Belo Horizonte',
+          state: 'MG',
+          country: 'Brasil',
+          organizationId: organization.id,
+        },
+      ],
+    });
+
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      organizationId: organization.id,
+      role: user.role,
+      isDemo: user.isDemo,
+    };
+
+    return {
+      accessToken: this.jwtService.sign(payload),
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        organizationId: organization.id,
+        isDemo: user.isDemo,
+      },
+    };
+  }
+
+  async deleteExpiredDemoAccounts() {
+    const now = new Date();
+
+    const expiredDemoUsers = await this.prisma.user.findMany({
+      where: {
+        isDemo: true,
+        demoExpiresAt: {
+          lte: now,
+        },
+      },
+      select: {
+        organizationId: true,
+      },
+    });
+
+    const organizationIds = expiredDemoUsers.map((user) => user.organizationId);
+
+    if (organizationIds.length === 0) {
+      return {
+        message: 'No expired demo accounts found.',
+        deletedOrganizations: 0,
+      };
+    }
+
+    const result = await this.prisma.organization.deleteMany({
+      where: {
+        id: {
+          in: organizationIds,
+        },
+        isDemo: true,
+      },
+    });
+
+    return {
+      message: 'Expired demo accounts deleted successfully.',
+      deletedOrganizations: result.count,
+    };
+  }
 }

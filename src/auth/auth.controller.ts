@@ -1,4 +1,4 @@
-import { Post, Body, Controller, Get, UseGuards } from '@nestjs/common';
+import { Post, Body, Controller, Get, UseGuards, Delete } from '@nestjs/common';
 import { SigninDTO, SignUpDTO } from './dtos/auth';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './auth.guard';
@@ -23,5 +23,15 @@ export class AuthController {
   @Get('me')
   getme(@CurrentUser() user: AuthenticatedUser) {
     return this.authService.me(user.sub);
+  }
+
+  @Post('demo')
+  async demo() {
+    return this.authService.createDemoAccount();
+  }
+
+  @Delete('demo/expired')
+  async deleteExpiredDemos() {
+    return this.authService.deleteExpiredDemoAccounts();
   }
 }
