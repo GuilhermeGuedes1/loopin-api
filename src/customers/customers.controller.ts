@@ -11,6 +11,14 @@ import { AuthenticatedUser } from 'src/auth/types/AuthenticatedUser';
 export class CustomersController {
   constructor(private customersService: CustomersService) {}
 
+  @Get('search')
+  async searchCustomers(
+    @CurrentUser() user: AuthenticatedUser,
+    @Query('search') search?: string,
+  ) {
+    return this.customersService.searchCustomers(user.organizationId, search);
+  }
+
   @Get()
   async getCustomers(
     @CurrentUser() user: AuthenticatedUser,
