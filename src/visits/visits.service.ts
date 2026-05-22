@@ -1,17 +1,21 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateVisitDTO } from './dtos/visit';
-import { AuthenticatedUser } from 'src/auth/types/AuthenticatedUser';
-
 import { PrismaService } from 'src/prisma/prisma.service';
+import { BadRequestException } from '@nestjs/common';
 
 @Injectable()
 export class VisitsService {
   constructor(private prisma: PrismaService) {}
-  async createVisit(user: AuthenticatedUser, data: CreateVisitDTO) {
+
+  async createVisit(
+    organizationId: string,
+    userId: string,
+    data: CreateVisitDTO,
+  ) {
     const customer = await this.prisma.customer.findFirst({
       where: {
         id: data.customerId,
-        organizationId: user.organizationId,
+        organizationId,
       },
     });
 
@@ -19,12 +23,22 @@ export class VisitsService {
       throw new NotFoundException('Customer not found');
     }
 
-    return this.prisma.visit.create({
+    const visitedAt = new Date(data.visitedAt);
+    const today = new Date();
+
+    if (visitedAt > today) {
+      throw new BadRequestException('Visit date cannot be in the future');
+    }
+
+    await this.prisma.visit.create({
       data: {
         customerId: data.customerId,
-        organizationId: user.organizationId,
-        createdById: user.sub,
+        organizationId,
+        visitedAt: new Date(data.visitedAt),
+        createdById: userId,
       },
     });
+
+    return { message: 'Visit created successfully' };
   }
 }

@@ -29,6 +29,7 @@ export type VisitMinAggregateOutputType = {
   customerId: string | null
   organizationId: string | null
   createdById: string | null
+  visitedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -38,6 +39,7 @@ export type VisitMaxAggregateOutputType = {
   customerId: string | null
   organizationId: string | null
   createdById: string | null
+  visitedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -47,6 +49,7 @@ export type VisitCountAggregateOutputType = {
   customerId: number
   organizationId: number
   createdById: number
+  visitedAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -58,6 +61,7 @@ export type VisitMinAggregateInputType = {
   customerId?: true
   organizationId?: true
   createdById?: true
+  visitedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -67,6 +71,7 @@ export type VisitMaxAggregateInputType = {
   customerId?: true
   organizationId?: true
   createdById?: true
+  visitedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -76,6 +81,7 @@ export type VisitCountAggregateInputType = {
   customerId?: true
   organizationId?: true
   createdById?: true
+  visitedAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -158,6 +164,7 @@ export type VisitGroupByOutputType = {
   customerId: string
   organizationId: string
   createdById: string
+  visitedAt: Date
   createdAt: Date
   updatedAt: Date
   _count: VisitCountAggregateOutputType | null
@@ -188,6 +195,7 @@ export type VisitWhereInput = {
   customerId?: Prisma.StringFilter<"Visit"> | string
   organizationId?: Prisma.StringFilter<"Visit"> | string
   createdById?: Prisma.StringFilter<"Visit"> | string
+  visitedAt?: Prisma.DateTimeFilter<"Visit"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Visit"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Visit"> | Date | string
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
@@ -200,6 +208,7 @@ export type VisitOrderByWithRelationInput = {
   customerId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
+  visitedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   customer?: Prisma.CustomerOrderByWithRelationInput
@@ -215,6 +224,7 @@ export type VisitWhereUniqueInput = Prisma.AtLeast<{
   customerId?: Prisma.StringFilter<"Visit"> | string
   organizationId?: Prisma.StringFilter<"Visit"> | string
   createdById?: Prisma.StringFilter<"Visit"> | string
+  visitedAt?: Prisma.DateTimeFilter<"Visit"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Visit"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Visit"> | Date | string
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
@@ -227,6 +237,7 @@ export type VisitOrderByWithAggregationInput = {
   customerId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
+  visitedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.VisitCountOrderByAggregateInput
@@ -242,12 +253,14 @@ export type VisitScalarWhereWithAggregatesInput = {
   customerId?: Prisma.StringWithAggregatesFilter<"Visit"> | string
   organizationId?: Prisma.StringWithAggregatesFilter<"Visit"> | string
   createdById?: Prisma.StringWithAggregatesFilter<"Visit"> | string
+  visitedAt?: Prisma.DateTimeWithAggregatesFilter<"Visit"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Visit"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Visit"> | Date | string
 }
 
 export type VisitCreateInput = {
   id?: string
+  visitedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutVisitsInput
@@ -260,12 +273,14 @@ export type VisitUncheckedCreateInput = {
   customerId: string
   organizationId: string
   createdById: string
+  visitedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type VisitUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  visitedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutVisitsNestedInput
@@ -278,6 +293,7 @@ export type VisitUncheckedUpdateInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  visitedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -287,12 +303,14 @@ export type VisitCreateManyInput = {
   customerId: string
   organizationId: string
   createdById: string
+  visitedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type VisitUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  visitedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -302,6 +320,7 @@ export type VisitUncheckedUpdateManyInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  visitedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -321,6 +340,7 @@ export type VisitCountOrderByAggregateInput = {
   customerId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
+  visitedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -330,6 +350,7 @@ export type VisitMaxOrderByAggregateInput = {
   customerId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
+  visitedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -339,6 +360,7 @@ export type VisitMinOrderByAggregateInput = {
   customerId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
+  visitedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -471,6 +493,7 @@ export type VisitUncheckedUpdateManyWithoutOrganizationNestedInput = {
 
 export type VisitCreateWithoutCreatedByInput = {
   id?: string
+  visitedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutVisitsInput
@@ -481,6 +504,7 @@ export type VisitUncheckedCreateWithoutCreatedByInput = {
   id?: string
   customerId: string
   organizationId: string
+  visitedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -519,12 +543,14 @@ export type VisitScalarWhereInput = {
   customerId?: Prisma.StringFilter<"Visit"> | string
   organizationId?: Prisma.StringFilter<"Visit"> | string
   createdById?: Prisma.StringFilter<"Visit"> | string
+  visitedAt?: Prisma.DateTimeFilter<"Visit"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Visit"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Visit"> | Date | string
 }
 
 export type VisitCreateWithoutCustomerInput = {
   id?: string
+  visitedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutVisitsInput
@@ -535,6 +561,7 @@ export type VisitUncheckedCreateWithoutCustomerInput = {
   id?: string
   organizationId: string
   createdById: string
+  visitedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -567,6 +594,7 @@ export type VisitUpdateManyWithWhereWithoutCustomerInput = {
 
 export type VisitCreateWithoutOrganizationInput = {
   id?: string
+  visitedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutVisitsInput
@@ -577,6 +605,7 @@ export type VisitUncheckedCreateWithoutOrganizationInput = {
   id?: string
   customerId: string
   createdById: string
+  visitedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -611,12 +640,14 @@ export type VisitCreateManyCreatedByInput = {
   id?: string
   customerId: string
   organizationId: string
+  visitedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type VisitUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  visitedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutVisitsNestedInput
@@ -627,6 +658,7 @@ export type VisitUncheckedUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  visitedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -635,6 +667,7 @@ export type VisitUncheckedUpdateManyWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  visitedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -643,12 +676,14 @@ export type VisitCreateManyCustomerInput = {
   id?: string
   organizationId: string
   createdById: string
+  visitedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type VisitUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  visitedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutVisitsNestedInput
@@ -659,6 +694,7 @@ export type VisitUncheckedUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  visitedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -667,6 +703,7 @@ export type VisitUncheckedUpdateManyWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  visitedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -675,12 +712,14 @@ export type VisitCreateManyOrganizationInput = {
   id?: string
   customerId: string
   createdById: string
+  visitedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type VisitUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  visitedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutVisitsNestedInput
@@ -691,6 +730,7 @@ export type VisitUncheckedUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  visitedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -699,6 +739,7 @@ export type VisitUncheckedUpdateManyWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  visitedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -710,6 +751,7 @@ export type VisitSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   customerId?: boolean
   organizationId?: boolean
   createdById?: boolean
+  visitedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
@@ -722,6 +764,7 @@ export type VisitSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   customerId?: boolean
   organizationId?: boolean
   createdById?: boolean
+  visitedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
@@ -734,6 +777,7 @@ export type VisitSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   customerId?: boolean
   organizationId?: boolean
   createdById?: boolean
+  visitedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
@@ -746,11 +790,12 @@ export type VisitSelectScalar = {
   customerId?: boolean
   organizationId?: boolean
   createdById?: boolean
+  visitedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type VisitOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "customerId" | "organizationId" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["visit"]>
+export type VisitOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "customerId" | "organizationId" | "createdById" | "visitedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["visit"]>
 export type VisitInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -779,6 +824,7 @@ export type $VisitPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     customerId: string
     organizationId: string
     createdById: string
+    visitedAt: Date
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["visit"]>
@@ -1211,6 +1257,7 @@ export interface VisitFieldRefs {
   readonly customerId: Prisma.FieldRef<"Visit", 'String'>
   readonly organizationId: Prisma.FieldRef<"Visit", 'String'>
   readonly createdById: Prisma.FieldRef<"Visit", 'String'>
+  readonly visitedAt: Prisma.FieldRef<"Visit", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Visit", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Visit", 'DateTime'>
 }
