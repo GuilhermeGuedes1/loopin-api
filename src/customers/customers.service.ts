@@ -1,24 +1,95 @@
 import { ConflictException, Injectable } from '@nestjs/common';
+
 import { PrismaService } from 'src/prisma/prisma.service';
+
 import { CreateCustomersDTO } from './dtos/customers';
+
+import { CustomerResponseDTO } from './dtos/customers';
+
+import { CustomersListResponseDTO } from './dtos/customers';
 
 @Injectable()
 export class CustomersService {
   constructor(private prisma: PrismaService) {}
 
-  async getCustomers(organizationId: string, page = 1, limit = 10) {
-    const skip = (page - 1) * limit;
+  private calculateDaysSince(date: Date) {
+    const today = new Date();
 
-    const totalCustomers = await this.prisma.customer.count({
+    return Math.floor(
+      (today.getTime() - date.getTime()) / (1000 * 60 * 60 * 24),
+    );
+  }
+
+  async searchCustomers(organizationId: string, search = '') {
+    return this.prisma.customer.findMany({
       where: {
         organizationId,
+        ...(search && {
+          OR: [
+            { name: { contains: search, mode: 'insensitive' } },
+            { lastName: { contains: search, mode: 'insensitive' } },
+            { email: { contains: search, mode: 'insensitive' } },
+            { phone: { contains: search, mode: 'insensitive' } },
+          ],
+        }),
       },
+      select: {
+        id: true,
+        name: true,
+        lastName: true,
+        email: true,
+        phone: true,
+      },
+      take: 10,
+      orderBy: {
+        name: 'asc',
+      },
+    });
+  }
+
+  async getCustomers(
+    organizationId: string,
+    page = 1,
+    limit = 10,
+    search?: string,
+  ): Promise<CustomersListResponseDTO> {
+    const skip = (page - 1) * limit;
+
+    const where = {
+      organizationId,
+
+      ...(search && {
+        OR: [
+          {
+            name: {
+              contains: search,
+              mode: 'insensitive' as const,
+            },
+          },
+
+          {
+            email: {
+              contains: search,
+              mode: 'insensitive' as const,
+            },
+          },
+
+          {
+            phone: {
+              contains: search,
+              mode: 'insensitive' as const,
+            },
+          },
+        ],
+      }),
+    };
+
+    const totalCustomers = await this.prisma.customer.count({
+      where,
     });
 
     const customers = await this.prisma.customer.findMany({
-      where: {
-        organizationId,
-      },
+      where,
 
       skip,
       take: limit,
@@ -26,8 +97,9 @@ export class CustomersService {
       include: {
         visits: {
           orderBy: {
-            createdAt: 'desc',
+            visitedAt: 'desc',
           },
+
           take: 1,
         },
 
@@ -40,34 +112,60 @@ export class CustomersService {
       },
     });
 
-    const customersWithBusinessRules = customers.map((customer) => {
-      const lastVisit = customer.visits[0];
-      const today = new Date();
+    const data: CustomerResponseDTO[] = customers.map((customer) => {
+      const lastVisit = customer.visits[0] as
+        | { visitedAt: Date | null }
+        | undefined;
 
-      const daysSinceLastVisit = lastVisit
-        ? Math.floor(
-            (today.getTime() - new Date(lastVisit.createdAt).getTime()) /
-              (1000 * 60 * 60 * 24),
-          )
+      const lastVisitAt = lastVisit?.visitedAt ?? null;
+
+      const daysSinceLastVisit = lastVisitAt
+        ? this.calculateDaysSince(lastVisitAt)
         : null;
+
       const canContact =
         daysSinceLastVisit !== null && daysSinceLastVisit >= 14;
 
       return {
-        ...customer,
-        lastVisitAt: lastVisit?.createdAt ?? null,
+        id: customer.id,
+
+        name: customer.name,
+
+        lastName: customer.lastName,
+
+        email: customer.email,
+
+        phone: customer.phone,
+
+        city: customer.city,
+
+        state: customer.state,
+
+        country: customer.country,
+
+        organization: {
+          id: customer.organization.id,
+          name: customer.organization.name,
+        },
+
+        lastVisitAt,
+
         daysSinceLastVisit,
+
         canContact,
+
+        createdAt: customer.createdAt,
       };
     });
 
     return {
-      customersWithBusinessRules,
+      data,
 
       meta: {
         page,
         limit,
         total: totalCustomers,
+
         totalPages: Math.ceil(totalCustomers / limit),
       },
     };
@@ -84,14 +182,26 @@ export class CustomersService {
     });
 
     if (userAlreadyExists) {
-      throw new ConflictException('User already exists');
+      throw new ConflictException('Customer already exists');
     }
 
-    return this.prisma.customer.create({
+    const customer = await this.prisma.customer.create({
       data: {
         ...data,
         organizationId,
       },
     });
+
+    return {
+      message: 'Customer created successfully',
+
+      customer: {
+        id: customer.id,
+        name: customer.name,
+        lastName: customer.lastName,
+        email: customer.email,
+        phone: customer.phone,
+      },
+    };
   }
 }

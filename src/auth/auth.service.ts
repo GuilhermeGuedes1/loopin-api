@@ -3,7 +3,7 @@ import { SigninDTO, SignUpDTO } from './dtos/auth';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-
+import { MeResponseDTO } from './dtos/auth';
 @Injectable()
 export class AuthService {
   constructor(
@@ -75,5 +75,33 @@ export class AuthService {
       email: user.email,
     });
     return { access_token: accessToken };
+  }
+
+  async me(userId: string): Promise<MeResponseDTO> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        organization: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    return {
+      sub: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      organizationName: user.organization.name,
+    };
   }
 }
