@@ -27,6 +27,7 @@ This project was designed using a multi-tenant architecture, where each organiza
 - JWT authentication
 - Protected routes using Guards
 - Current authenticated user decorator
+- Swagger documentation
 
 ## Organizations
 
@@ -217,7 +218,6 @@ These values are extracted from the authenticated user context.
 - Pagination
 - Search filters
 - Soft delete
-- Swagger documentation
 - Unit tests
 - Docker support
 
