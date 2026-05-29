@@ -112,6 +112,8 @@ export class CustomersService {
       },
     });
 
+    const CONTACT_COOLDOWN_DAYS = 14;
+
     const data: CustomerResponseDTO[] = customers.map((customer) => {
       const lastVisit = customer.visits[0] as
         | { visitedAt: Date | null }
@@ -124,7 +126,13 @@ export class CustomersService {
         : null;
 
       const canContact =
-        daysSinceLastVisit !== null && daysSinceLastVisit >= 14;
+        daysSinceLastVisit === null ||
+        daysSinceLastVisit >= CONTACT_COOLDOWN_DAYS;
+
+      const daysUntilContact =
+        daysSinceLastVisit === null
+          ? 0
+          : Math.max(0, CONTACT_COOLDOWN_DAYS - daysSinceLastVisit);
 
       return {
         id: customer.id,
@@ -151,6 +159,8 @@ export class CustomersService {
         lastVisitAt,
 
         daysSinceLastVisit,
+
+        daysUntilContact,
 
         canContact,
 

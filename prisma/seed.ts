@@ -8,7 +8,7 @@ const adapter = new PrismaPg({
 
 const prisma = new PrismaClient({ adapter });
 
-const DEV_ORGANIZATION_ID = 'af7572ed-98a6-4dde-ac4c-2b031d407b34';
+const DEV_ORGANIZATION_ID = '60d954e7-6759-4238-9dcf-6bf8c58d6f41';
 
 async function main() {
   await prisma.customer.createMany({
