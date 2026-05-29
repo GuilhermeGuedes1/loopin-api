@@ -179,6 +179,12 @@ export class CustomerResponseDTO {
   canContact!: boolean;
 
   @ApiProperty({
+    example: 0,
+    nullable: true,
+  })
+  daysUntilContact!: number | null;
+
+  @ApiProperty({
     example: '2026-05-22T12:00:00.000Z',
   })
   createdAt!: Date;
