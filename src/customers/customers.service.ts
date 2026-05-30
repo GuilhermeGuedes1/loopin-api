@@ -2,11 +2,11 @@ import { ConflictException, Injectable } from '@nestjs/common';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 
-import { CreateCustomersDTO } from './dtos/customers';
+import { CreateCustomersDTO } from './dtos/create-customer.dto';
 
-import { CustomerResponseDTO } from './dtos/customers';
+import { CustomerResponseDTO } from './dtos/customer-response.dto';
 
-import { CustomersListResponseDTO } from './dtos/customers';
+import { CustomersListResponseDTO } from './dtos/customers-list-response.dto';
 
 @Injectable()
 export class CustomersService {
@@ -134,51 +134,24 @@ export class CustomersService {
           ? 0
           : Math.max(0, CONTACT_COOLDOWN_DAYS - daysSinceLastVisit);
 
-      return {
-        id: customer.id,
-
-        name: customer.name,
-
-        lastName: customer.lastName,
-
-        email: customer.email,
-
-        phone: customer.phone,
-
-        city: customer.city,
-
-        state: customer.state,
-
-        country: customer.country,
-
-        organization: {
-          id: customer.organization.id,
-          name: customer.organization.name,
-        },
-
+      return new CustomerResponseDTO({
+        customer,
         lastVisitAt,
-
         daysSinceLastVisit,
-
         daysUntilContact,
-
         canContact,
-
-        createdAt: customer.createdAt,
-      };
+      });
     });
 
-    return {
+    return new CustomersListResponseDTO({
       data,
-
       meta: {
         page,
         limit,
         total: totalCustomers,
-
         totalPages: Math.ceil(totalCustomers / limit),
       },
-    };
+    });
   }
 
   async createCustomers(organizationId: string, data: CreateCustomersDTO) {
