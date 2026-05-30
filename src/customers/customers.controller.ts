@@ -11,7 +11,7 @@ import {
 } from '@nestjs/swagger';
 
 import { CustomersService } from './customers.service';
-import { CreateCustomersDTO } from './dtos/customers';
+import { CreateCustomersDTO } from './dtos/create-customer.dto';
 
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { CurrentUser } from 'src/decorators/currentUser.decorator';
